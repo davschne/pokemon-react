@@ -5,6 +5,7 @@ var pokeurl = 'http://pokeapi.co/';
 var BattleContainer = require('./BattleContainer.jsx');
 
 var App = React.createClass({
+
   choosePokemon: function() {
     function choose(array) {
       var index = Math.floor(Math.random() * 151);
@@ -20,14 +21,17 @@ var App = React.createClass({
         })
       }.bind(this));
   },
+
   getInitialState: function() {
     return {
       pokemon: []
     };
   },
+
   componentDidMount: function() {
     this.choosePokemon();
   },
+
   render: function() {
     return (
       <body>
