@@ -3,19 +3,31 @@ var PokemonContainer = require('./PokemonContainer.jsx');
 
 var BattleContainer = React.createClass({
 
-  attack: function(targetId, attack, power, accuracy) {
-    var target = this.state.pokemon[targetId];
-    var rand = (Math.round(Math.random * 38) + 217) / 255;
-    var damage = (((attack * power) / (targetId.defense * 50)) + 2) * rand;
+  printRefs: function() {
+    console.log(this.refs);
+  },
 
+  // attack formula adapted from:
+  // https://www.math.miami.edu/~jam/azure/compendium/battdam.htm
+  attack: function(targetRefIndex, attack, power) {
+    var target = this.refs['pokemon' + targetRefIndex];
+    var rand = ((Math.random() * 38) + 217) / 255;
+    var damage = Math.round((((attack * power) / (target.state.defense * 50)) + 2) * rand);
+    target.takeDamage(damage);
   },
 
   render: function() {
-    var pokemonContainers = this.props.pokemon.map(function(pokemon) {
-      return <PokemonContainer key={pokemon.name} {...pokemon}/>;
+    var that = this;
+    var pokemonContainers = this.props.pokemon.map(function(pokemon, i) {
+      return (
+        <PokemonContainer key={pokemon.name}
+                          ref={'pokemon' + i}
+                          attack={that.attack.bind(that, 1 - i)}
+                          {...pokemon}/>
+      );
     });
     return (
-      <div>{pokemonContainers}</div>
+      <ul>{pokemonContainers}</ul>
     );
   }
 });
