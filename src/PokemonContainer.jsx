@@ -36,6 +36,10 @@ var PokemonContainer = React.createClass({
 
   takeDamage: function(damage) {
     var newHP = this.state.hp - damage;
+    if (newHP <= 0) {
+      newHP = 0;
+      this.props.defeated();
+    }
     this.setState({
       hp: newHP
     });
@@ -48,7 +52,8 @@ var PokemonContainer = React.createClass({
       attack: 0,
       defense: 0,
       hp: 0,
-      moves: []
+      moves: [],
+      defeated: false
     };
   },
 
@@ -60,7 +65,9 @@ var PokemonContainer = React.createClass({
     return (
       <li>
         <Pokemon {...this.state}/>
-        <button onClick={this.props.attack.bind(this, this.state.attack, 20)}>
+        <button disabled={this.state.defeated}
+                onClick={this.props.attack.bind(this, this.state.attack, 20)}
+        >
           Attack!
         </button>
       </li>
